@@ -1,23 +1,35 @@
 ﻿<Window x:Class="WpfApp6.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WpfApp6"
-        mc:Ignorable="d"
-        Title="Quiz" Height="350" Width="525">
+        Title="Quiz" Height="350" Width="525" WindowStartupLocation="CenterScreen"
+        Background="#FFFAFAFA">
     <Grid>
-        <TextBlock x:Name="QuestionText" FontSize="20" TextWrapping="Wrap" 
-                   HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10"/>
-        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button x:Name="Option1" Content="Option 1" Click="Option_Click" Margin="5" Width="200"/>
-            <Button x:Name="Option2" Content="Option 2" Click="Option_Click" Margin="5" Width="200"/>
-            <Button x:Name="Option3" Content="Option 3" Click="Option_Click" Margin="5" Width="200"/>
-            <Button x:Name="Option4" Content="Option 4" Click="Option_Click" Margin="5" Width="200"/>
-        </StackPanel>
-        <ProgressBar x:Name="TimerBar" Height="20" VerticalAlignment="Bottom" Margin="10"/>
+        <TextBlock x:Name="QuestionText" 
+                   FontSize="24" FontWeight="Bold" 
+                   HorizontalAlignment="Center" VerticalAlignment="Top" 
+                   Margin="10" Text="Kérdés"/>
 
-        <TextBlock x:Name="StatsText" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Bottom" 
-                   Margin="10,0,0,10" Text="Statisztika: Helyes: 0 | Hibás: 0" />
+        <!-- Időzítő -->
+        <ProgressBar x:Name="TimerBar"
+                     Height="20"
+                     HorizontalAlignment="Stretch"
+                     VerticalAlignment="Top"
+                     Margin="10,50,10,0"
+                     Maximum="100"
+                     Value="100"
+                     Foreground="#FF0078D7"
+                     Background="#FFE6E6E6" />
+
+        <UniformGrid Rows="2" Columns="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10">
+            <Button x:Name="Option1" Content="Option 1" Click="Option_Click" />
+            <Button x:Name="Option2" Content="Option 2" Click="Option_Click" />
+            <Button x:Name="Option3" Content="Option 3" Click="Option_Click" />
+            <Button x:Name="Option4" Content="Option 4" Click="Option_Click" />
+        </UniformGrid>
+
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="10">
+            <TextBlock x:Name="StatsText" FontSize="16" Text="Statisztika: Helyes: 0 | Hibás: 0" Margin="10"/>
+            <TextBlock x:Name="ScoreText" FontSize="16" FontWeight="Bold" Foreground="Green" Text="Pontszám: 0" Margin="10"/>
+        </StackPanel>
     </Grid>
 </Window>

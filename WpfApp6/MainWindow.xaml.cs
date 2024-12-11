@@ -14,12 +14,13 @@ namespace WpfApp6
 {
     public partial class MainWindow : Window
     {
-        private List<Word> words;       // A teljes szólista
-        private Word currentWord;       // Jelenlegi kérdés
-        private DispatcherTimer timer;  // Időzítő
-        private int timeLeft;           // Időzítő számláló
-        private int correctCount = 0;   // Helyes válaszok száma
-        private int incorrectCount = 0; // Hibás válaszok száma
+        private List<Word> words;
+        private Word currentWord;
+        private DispatcherTimer timer;
+        private int timeLeft;
+        private int correctCount = 0;
+        private int incorrectCount = 0;
+        private int score = 0;
 
         public MainWindow()
         {
@@ -37,7 +38,6 @@ namespace WpfApp6
 
         private void LoadNextBatch()
         {
-            // Új kérdéssor betöltése
             words.AddRange(DatabaseHelper.GetRandomWords(10));
             LoadNextQuestion();
         }
@@ -47,12 +47,6 @@ namespace WpfApp6
             if (words.Count == 0)
             {
                 LoadNextBatch();
-            }
-
-            if (words.Count == 0)
-            {
-                MessageBox.Show("Nincs több kérdés az adatbázisban.", "Vége", MessageBoxButton.OK, MessageBoxImage.Information);
-                Close();
                 return;
             }
 
@@ -62,8 +56,8 @@ namespace WpfApp6
             QuestionText.Text = $"Mi a(z) '{currentWord.WordText}' jelentése?";
 
             var options = DatabaseHelper.GetRandomWords(3)
-                                        .Select(w => w.Translation)
-                                        .ToList();
+                                .Select(w => w.Translation)
+                                .ToList();
             options.Add(currentWord.Translation);
             options = options.OrderBy(o => Guid.NewGuid()).ToList();
 
@@ -95,9 +89,8 @@ namespace WpfApp6
             if (timeLeft <= 0)
             {
                 timer.Stop();
-                MessageBox.Show("Lejárt az idő!", "Idő", MessageBoxButton.OK, MessageBoxImage.Warning);
                 incorrectCount++;
-                UpdateStats();
+                UpdateScore(-5); // Büntetés a kifutott időért
                 LoadNextQuestion();
             }
         }
@@ -109,21 +102,24 @@ namespace WpfApp6
 
             if (selectedButton.Content.ToString() == currentWord.Translation)
             {
-                MessageBox.Show("Helyes válasz!", "Gratulálok!", MessageBoxButton.OK, MessageBoxImage.Information);
                 correctCount++;
+                UpdateScore(10);
+                MessageBox.Show("Helyes válasz!", "Gratulálok!", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else
             {
-                MessageBox.Show($"Hibás! A helyes válasz: {currentWord.Translation}", "Hiba", MessageBoxButton.OK, MessageBoxImage.Error);
                 incorrectCount++;
+                UpdateScore(-5);
+                MessageBox.Show($"Hibás! A helyes válasz: {currentWord.Translation}", "Hiba", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
-            UpdateStats();
             LoadNextQuestion();
         }
 
-        private void UpdateStats()
+        private void UpdateScore(int points)
         {
+            score += points;
+            ScoreText.Text = $"Pontszám: {score}";
             StatsText.Text = $"Statisztika: Helyes: {correctCount} | Hibás: {incorrectCount}";
         }
     }
